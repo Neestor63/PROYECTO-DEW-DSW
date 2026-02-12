@@ -1,0 +1,520 @@
+/* ==========================================================================
+   1. VARIABLES Y CONFIGURACIÓN BASE (Común para todo el proyecto)
+   ========================================================================== */
+:root {
+    --oro: #FFD700;
+    --naranja-fuego: #ff8c00;
+    --amarillo-brillante: #ffcc00;
+    --glow: 0 0 20px rgba(255, 215, 0, 0.7);
+    --gradiente-inazuma: linear-gradient(180deg, #ffb100 0%, #ff8c00 100%);
+    --negro-transparente: rgba(0, 0, 0, 0.6);
+    --blanco-transparente: rgba(255, 255, 255, 0.4);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: url('../img/SI_NDS_InazumaEleven.jpg') no-repeat center center fixed;
+    background-size: cover; position: relative;
+    transition: background 0.3s ease;
+}
+
+/* Capas dinámicas de Tema (Claro/Oscuro) */
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+body.oscuro::before { background: var(--negro-transparente); }
+body.claro::before { background: var(--blanco-transparente); }
+
+.contenedor { width: 90%; max-width: 1200px; margin: auto; padding: 20px 0; }
+
+h1 {
+    font-size: 3rem; text-shadow: 3px 3px 0 var(--oro);
+    text-align: center; color: #000; text-transform: uppercase;
+}
+
+/* Botones Universales (Inazuma Style) */
+.btn {
+    padding: 12px 20px; font-size: 1.1rem; font-weight: bold;
+    background: linear-gradient(var(--amarillo-brillante), var(--naranja-fuego));
+    border: 3px solid var(--oro); border-radius: 12px;
+    cursor: pointer; text-transform: uppercase; color: #000;
+    box-shadow: 0 4px 0 #cc9a00; transition: all 0.1s;
+}
+.btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #cc9a00; }
+
+/* Menú de Navegación */
+.menu { text-align: center; margin-bottom: 30px; }
+.menu a {
+    font-size: 1.1rem; margin: 0 15px; color: #000;
+    text-decoration: none; text-shadow: 1px 1px 0 var(--oro);
+    font-weight: bold; text-transform: uppercase;
+}
+
+/* ==========================================================================
+   2. LOGIN (login.php)
+   ========================================================================== */
+.form-wrapper {
+    background: var(--gradiente-inazuma); border: 5px solid var(--oro);
+    border-radius: 30px; padding: 2.5rem; width: 400px;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    box-shadow: var(--glow); text-align: center;
+}
+
+.input-group { margin-bottom: 20px; text-align: left; }
+.input-group label { display: block; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+
+input[type="text"], input[type="password"] {
+    width: 100%; padding: 12px; border: 3px solid #333; border-radius: 12px; font-size: 1rem;
+}
+
+.error-box {
+    background: #ff4d4d; color: white; padding: 10px; border-radius: 10px;
+    margin-top: 15px; font-weight: bold; border: 2px solid #b30000;
+    animation: shake 0.4s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+}
+
+/* ==========================================================================
+   3. TIENDA - CARDS Y CARRUSEL (tienda.php)
+   ========================================================================== */
+.carrusel-marco {
+    width: 100%; max-width: 1000px; height: 350px;
+    margin: 20px auto 40px; overflow: hidden; border: 6px solid var(--oro);
+    border-radius: 30px; position: relative; box-shadow: var(--glow);
+}
+.carrusel-pistas { display: flex; height: 100%; transition: transform 0.7s ease-in-out; }
+.slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; }
+.slide span { background: rgba(0,0,0,0.7); color: var(--oro); width: 100%; padding: 15px; text-align: center; font-size: 1.8rem; }
+
+.productos { 
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 30px; margin-top: 30px; 
+}
+
+.card {
+    background: var(--gradiente-inazuma); border: 4px solid var(--oro);
+    border-radius: 25px; padding: 20px; display: flex; flex-direction: column;
+    justify-content: space-between; min-height: 520px; text-align: center;
+}
+
+.card img { width: 100%; height: 180px; object-fit: contain; background: rgba(255,255,255,0.2); border-radius: 15px; margin-bottom: 15px; }
+
+/* Estrellas con aire */
+.valoracion { margin: 15px 0; display: flex; justify-content: center; gap: 8px; }
+.valoracion span { font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
+.valoracion span:hover { transform: scale(1.3); }
+
+.feedback-async { height: 25px; font-weight: bold; color: #333; margin-bottom: 10px; }
+
+/* Botones de Card separados */
+.card .acciones { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+
+/* ==========================================================================
+   4. CARRITO (carrito.php) - DISEÑO ESTRECHO
+   ========================================================================== */
+.carrito-contenedor {
+    background: rgba(255, 255, 255, 0.95); padding: 25px;
+    border: 4px solid var(--oro); border-radius: 20px;
+    max-width: 800px; margin: 30px auto; box-shadow: var(--glow);
+}
+
+#tabla-carrito { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+#tabla-carrito th { background: #333; color: var(--oro); padding: 12px; text-transform: uppercase; }
+#tabla-carrito td { padding: 12px; border-bottom: 1px solid #ddd; text-align: center; font-weight: bold; }
+
+input[type="number"] { width: 50px; padding: 5px; border-radius: 5px; border: 2px solid var(--naranja-fuego); }
+
+.total { text-align: right; font-size: 2rem; font-weight: bold; margin: 20px 0; text-shadow: 1px 1px 0 var(--oro); }
+
+/* Botones Carrito en fila */
+.carrito-contenedor .acciones { display: flex; flex-direction: row; justify-content: space-between; gap: 20px; }
+.carrito-contenedor .btn { width: auto; min-width: 180px; }
+
+/* ==========================================================================
+   5. LISTA DE DESEOS (lista_deseos.php) - ESTILO COLECCIONISTA
+   ========================================================================== */
+
+/* Contenedor principal con efecto de profundidad */
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin: 50px auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px); /* Efecto cristalizado */
+    border-radius: 40px;
+    border: 4px solid rgba(255, 215, 0, 0.3);
+    max-width: 900px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* El carrusel que contiene las cartas */
+.carousel {
+    display: flex;
+    overflow: hidden;
+    width: 320px; /* Tamaño de una carta */
+    scroll-behavior: smooth;
+    border-radius: 20px;
+    border: 5px solid var(--oro);
+    box-shadow: var(--glow);
+    background: #fff;
+}
+
+/* Cada carta individual en la lista de deseos */
+.carousel .item {
+    min-width: 100%;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.carousel .item img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+    margin-bottom: 20px;
+}
+
+.carousel .item .nombre {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.carousel .item .precio {
+    font-size: 1.5rem;
+    color: var(--naranja-fuego);
+    font-weight: bold;
+    background: #333;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 10px;
+    color: var(--oro);
+}
+
+/* Botones de navegación (Flechas) */
+.carousel-btn {
+    background: var(--gradiente-inazuma);
+    border: 3px solid #000;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.carousel-btn:hover {
+    transform: scale(1.15);
+    background: var(--oro);
+    box-shadow: var(--glow);
+}
+
+.carousel-btn:active {
+    transform: scale(0.9);
+}
+
+/* Mensaje de lista vacía */
+.wishlist-empty {
+    font-size: 1.8rem;
+    text-align: center;
+    padding: 50px;
+    color: #000;
+    background: var(--gradiente-inazuma);
+    border: 4px dashed #000;
+    border-radius: 20px;
+    text-shadow: 1px 1px 0 var(--oro);
+}
+
+/* ==========================================================================
+   6. PREFERENCIAS (preferencias.php) - PANEL DE CONTROL AVANZADO
+   ========================================================================== */
+
+.preferencias-box {
+    max-width: 480px;
+    margin: 60px auto;
+    background: var(--gradiente-inazuma);
+    border: 5px solid var(--oro);
+    border-radius: 35px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: var(--glow), 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.preferencias-box h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #000;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+}
+
+/* Estilo de los grupos de selección */
+.preferencias-box label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin: 20px 0 8px 5px;
+    text-transform: uppercase;
+    color: #222;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.preferencias-box select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 15px;
+    border: 3px solid #333;
+    background-color: white;
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    appearance: none; /* Quita el estilo por defecto del navegador */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+}
+
+.preferencias-box select:focus {
+    border-color: var(--naranja-fuego);
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+    transform: scale(1.02);
+}
+
+/* Botón Guardar (Verde Épico) */
+.preferencias-box button[type="submit"] {
+    width: 100%;
+    margin-top: 35px;
+    padding: 16px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(#4CAF50, #2E7D32);
+    border: 3px solid #1B5E20;
+    border-radius: 18px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 5px 0 #1B5E20;
+    transition: all 0.1s ease;
+}
+
+.preferencias-box button[type="submit"]:hover {
+    filter: brightness(1.1);
+}
+
+.preferencias-box button[type="submit"]:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #1B5E20;
+}
+
+/* Estilo para el botón Volver */
+.btn-volver {
+    display: inline-block;
+    width: 100%;
+    margin-top: 15px;
+    background: #666 !important;
+    border: 3px solid #444 !important;
+    color: white !important;
+    box-shadow: 0 5px 0 #333 !important;
+}
+
+.btn-volver:active {
+    box-shadow: 0 1px 0 #333 !important;
+}
+
+
+/* ==========================================================================
+   7. GESTIÓN DE LOTES POO (gestion_lotes.php) - ESTILO PANEL TÁCTICO
+   ========================================================================== */
+
+/* Contenedor principal que hereda el cristalizado del carrito */
+.panel-lotes {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border: 5px solid var(--oro);
+    border-radius: 30px;
+    max-width: 900px;
+    margin: 40px auto;
+    box-shadow: var(--glow), 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.panel-lotes h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0 var(--oro);
+}
+
+.panel-lotes p {
+    text-align: center;
+    font-weight: bold;
+    color: #444;
+    text-transform: uppercase;
+}
+
+/* Formulario estilo "Pizarra Táctica" */
+.form-lotes {
+    background: #f0f0f0;
+    padding: 20px;
+    border-radius: 20px;
+    border: 3px dashed #333;
+    margin-bottom: 30px;
+}
+
+.form-lotes select, 
+.form-lotes input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #333;
+    font-family: inherit;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Bloque de visualización de Objetos (Estilo Terminal de Datos) */
+.resumen-poo {
+    margin-top: 30px;
+}
+
+.resumen-poo h2 {
+    color: #000;
+    text-transform: uppercase;
+    border-bottom: 4px solid var(--naranja-fuego);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.resumen-poo h3 {
+    background: #333;
+    color: var(--oro);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+/* El cuadro verde donde sale el print_r */
+.debug-obj {
+    background: #0d1117; /* Fondo tipo código */
+    color: #39ff14;    /* Verde neón Inazuma */
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #333;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+/* Estilización de los botones dentro del panel */
+.panel-lotes .acciones-lotes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+/* Estilo para etiquetas */
+.panel-lotes label {
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: #222;
+}
+
+/* Contenedor de la sección */
+.seccion-lotes {
+    margin-top: 30px;
+}
+
+.total-banner {
+    background: #333;
+    color: var(--oro);
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border: 2px solid var(--oro);
+}
+
+/* Grid para las mini-cards */
+.grid-lotes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+/* Card individual de cada Objeto */
+.card-lote-individual {
+    background: white;
+    border: 3px solid #333;
+    border-radius: 15px;
+    position: relative;
+    padding-top: 30px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    box-shadow: 5px 5px 0px #333;
+}
+
+.card-lote-individual:hover {
+    transform: scale(1.05);
+    border-color: var(--naranja-fuego);
+}
+
+.card-numero {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #333;
+    color: white;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 2px 0;
+}
+
+.card-contenido {
+    padding: 15px;
+    text-align: center;
+}
+
+.precio-lote {
+    display: block;
+    font-size: 1.5rem;
+    color: #e67e22;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.card-footer-lote {
+    background: #f0f0f0;
+    font-size: 0.7rem;
+    padding: 5px;
+    text-align: center;
+    color: #666;
+    border-top: 1px solid #ddd;
+}
